@@ -1,93 +1,73 @@
 import streamlit as st
-from audio_recorder_streamlit import audio_recorder
-import librosa
-import soundfile as sf
-import numpy as np
-import io
 
-st.set_page_config(page_title="VICKY - Vocal Intelligence Coach", layout="centered")
-st.title("🎙️ VICKY - Your Vocal Intelligence Coach")
-
-# Guided Warmups and Breathing
-with st.expander("🧘 Guided Breathing and Vocal Warmups"):
-    st.markdown("**Breathing Exercise:**")
-    st.markdown("1. Inhale deeply through your nose for 4 counts\n2. Hold for 4 counts\n3. Exhale gently through your mouth for 6 counts\n4. Repeat 4 times")
-    st.markdown("**Pitch Glide:** Glide from low to high pitch on 'oooo' and back down. Helps stretch your range.")
-    st.markdown("**Lip Trills:** Try lip trills on a simple scale. This warms up pitch and airflow.")
-    st.markdown("**Sirens:** Start from your lowest note and slide to your highest and back.")
-
-# Ask user what song they're singing
-song_title = st.text_input("🎵 What song are you singing today?", placeholder="e.g., 'Halo by Beyoncé'")
-if song_title:
-    st.markdown(f"🎤 Singing: **{song_title}**")
-
-# Audio Recorder
-audio_bytes = audio_recorder(
-    text="🎤 Click to record your voice",
-    recording_color="#e8b62c",
-    neutral_color="#6aa36f",
-    icon_name="microphone",
-    icon_size="2x",
+# --- PAGE CONFIG ---
+st.set_page_config(
+    page_title="Meet VICKY – Your Vocal Intelligence Coach",
+    page_icon="🎙️",
+    layout="centered"
 )
 
-if audio_bytes:
-    st.audio(audio_bytes, format="audio/wav")
+# --- HEADER ---
+st.title("🎙️ Meet VICKY – Your Vocal Intelligence Coach")
+st.subheader("Also known as VIC")
 
-    try:
-        # Load audio
-        audio_buffer = io.BytesIO(audio_bytes)
-        audio_data, sample_rate = sf.read(audio_buffer)
+# --- INTRO ---
+st.markdown("""
+VICKY (short for **Vocal Intelligence Coach**) is your AI-powered voice mentor.
 
-        if len(audio_data.shape) > 1:
-            audio_data = librosa.to_mono(audio_data.T)
+Whether you're a singer, speaker, student, or performer, **VIC** helps you unlock your vocal potential with smart, personalized guidance.
+""")
 
-        duration = len(audio_data) / sample_rate
-        st.write(f"🎧 Sample Rate: {sample_rate} Hz")
-        st.write(f"🕒 Duration: {duration:.2f} seconds")
+# --- WHAT VICKY CAN DO ---
+st.markdown("---")
+st.header("🔥 What VICKY Can Do")
 
-        # Audio Features
-        tempo, beats = librosa.beat.beat_track(y=audio_data, sr=sample_rate)
-        pitch = librosa.yin(audio_data, fmin=80, fmax=1000, sr=sample_rate)
-        pitch_mean = np.mean(pitch)
-        pitch_std = np.std(pitch)
-        energy = np.mean(librosa.feature.rms(y=audio_data))
-        mfccs = librosa.feature.mfcc(y=audio_data, sr=sample_rate, n_mfcc=13)
+st.markdown("""
+### 🗣️ Real-Time & Asynchronous Coaching
+Join live sessions or send in your recordings for feedback anytime.
 
-        # Plot waveform
-        st.subheader("📈 Waveform")
-        st.line_chart(audio_data)
+### 🎯 Feedback on Key Vocal Elements
+- **Pitch**: Stay in tune and hit every note with confidence  
+- **Tone**: Discover your signature sound and polish your resonance  
+- **Breath**: Learn to support your voice with powerful, relaxed breathing  
+- **Diction**: Improve clarity and pronunciation  
+- **Delivery**: Connect emotionally and stylistically with your audience  
 
-        # VICKY Feedback
-        st.markdown("---")
-        st.subheader("🧠 VICKY's Feedback")
+### 🎵 Guided Warmups & Vocal Exercises
+- Daily warmups tailored to your voice
+- Custom drills based on your progress
+- Smart suggestions for your vocal type
 
-        feedback = ""
+### 📈 Progress Tracking & Personalized Goals
+- Weekly reports
+- Vocal journals
+- Motivational feedback to keep you growing
 
-        if pitch_std < 20:
-            feedback += "✅ Pitch was stable — great control!\n\n"
-        else:
-            feedback += "🎯 Try working on pitch accuracy — some variation noted.\n\n"
+### 💡 Encouragement & Education
+- Learn how your voice works
+- Tips for confidence, performance, and healthy habits
+""")
 
-        if energy < 0.02:
-            feedback += "💤 Soft delivery — could work well for emotional or intimate songs.\n\n"
-        elif energy > 0.1:
-            feedback += "🔥 Strong projection — this suits powerful or belting songs.\n\n"
-        else:
-            feedback += "🎵 Balanced energy — works for most genres.\n\n"
+# --- CTA BUTTONS ---
+st.markdown("---")
+st.header("🚀 Ready to Train with VICKY?")
+col1, col2, col3 = st.columns(3)
 
-        if tempo < 70:
-            feedback += "🕊️ Slow tempo — great for soul, R&B, or ballads.\n"
-        elif tempo > 120:
-            feedback += "💃 Fast tempo — consider pop or upbeat gospel.\n"
-        else:
-            feedback += "🎶 Mid-tempo — flexible genre range.\n"
+with col1:
+    st.button("🎤 Start Vocal Session", help="Coming soon")
 
-        st.success("Here's what VIC says:")
-        st.markdown(f"**{feedback}**")
+with col2:
+    st.button("📤 Upload Recording", help="Feature under development")
 
-    except Exception as e:
-        st.error(f"⚠️ Error processing audio: {e}")
+with col3:
+    st.button("📚 Browse Exercises", help="Feature under development")
 
-else:
-    st.info("Click the microphone above to record your voice.")
+# --- FOOTER ---
+st.markdown("---")
+st.caption("VICKY is part of the Nrth Eydn Ltd. creative development platform. Powered by AI. Guided by purpose.")
 
+
+
+        
+
+      
