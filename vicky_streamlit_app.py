@@ -117,6 +117,63 @@ Stretch slowly. Never push too hard past your comfortable range.
 st.info("💡 TIP: Use a keyboard app or tuner to track pitch and range as you practice.")
 
 
+
+import streamlit as st
+from audio_recorder_streamlit import audio_recorder
+import librosa
+import soundfile as sf
+import numpy as np
+import io
+
+st.title("Audio Recorder with Streamlit")
+
+# Audio recorder component
+audio_bytes = audio_recorder(
+    text="Click to record",
+    recording_color="#e8b62c",
+    neutral_color="#6aa36f",
+    icon_name="microphone",
+    icon_size="2x",
+)
+
+if audio_bytes:
+    st.audio(audio_bytes, format="audio/wav")
+    
+    # Convert bytes to numpy array for processing
+    try:
+        # Write bytes to a temporary file-like object
+        audio_buffer = io.BytesIO(audio_bytes)
+        
+        # Load audio data using soundfile
+        audio_data, sample_rate = sf.read(audio_buffer)
+        
+        st.write(f"Audio sample rate: {sample_rate} Hz")
+        st.write(f"Audio duration: {len(audio_data) / sample_rate:.2f} seconds")
+        st.write(f"Audio shape: {audio_data.shape}")
+        
+        # Use librosa for audio analysis
+        if len(audio_data.shape) > 1:
+            # Convert stereo to mono if needed
+            audio_data = librosa.to_mono(audio_data.T)
+        
+        # Extract some audio features
+        tempo, beats = librosa.beat.beat_track(y=audio_data, sr=sample_rate)
+        mfccs = librosa.feature.mfcc(y=audio_data, sr=sample_rate, n_mfcc=13)
+        
+        st.write(f"Estimated tempo: {tempo:.2f} BPM")
+        st.write(f"Number of beats detected: {len(beats)}")
+        st.write(f"MFCC features shape: {mfccs.shape}")
+        
+        # Display waveform
+        st.subheader("Audio Waveform")
+        st.line_chart(audio_data)
+        
+    except Exception as e:
+        st.error(f"Error processing audio: {str(e)}")
+
+st.write("Record audio using the button above to see analysis results!")
+
+
 # --- FOOTER ---
 st.divider()
 st.caption("VICKY is part of the Nrth Eydn Ltd. creative development platform. Streamlit-only prototype.")
