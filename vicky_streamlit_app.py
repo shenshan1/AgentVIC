@@ -67,6 +67,56 @@ for msg in st.session_state.chat_history:
     speaker = "🧑 You" if msg["role"] == "user" else "🎙️ VICKY"
     st.markdown(f"**{speaker}:** {msg['content']}")
 
+st.header("🎵 Learn With VICKY")
+
+exercise = st.selectbox(
+    "Choose an area to practice:",
+    ["Breathing", "Pitch Accuracy", "Voice Control", "Stretching Vocal Range"]
+)
+
+if exercise == "Breathing":
+    st.subheader("🫁 Breathing Exercises")
+    st.markdown("""
+- **Hiss Exercise:** Inhale deeply for 4 seconds, exhale with a long steady “ssss” sound. Repeat 5 times.  
+- **Box Breathing:** Inhale 4s → Hold 4s → Exhale 4s → Hold 4s. Repeat 4 cycles.  
+- **Belly Breathing:** Place a hand on your stomach, inhale deeply so your hand rises, then exhale slowly.
+
+Try 5 minutes of focused breathing before singing.
+""")
+
+elif exercise == "Pitch Accuracy":
+    st.subheader("🎯 Pitch Exercises")
+    st.markdown("""
+- **5-Tone Scale:** Sing Do-Re-Mi-Fa-So (C-D-E-F-G), then back down. Use a piano app or tuner to match.  
+- **Pitch Matching:** Play a single note (e.g. C4) and hold it. Check against a piano or digital tuner.  
+- **Lip Trill Scales:** Sing scales while doing a lip trill (like a motorboat).
+
+Daily repetition improves pitch control.
+""")
+
+elif exercise == "Voice Control":
+    st.subheader("🎤 Voice Control Drills")
+    st.markdown("""
+- **Volume Swells:** Sustain a note and gradually increase/decrease volume without cracking.  
+- **Staccato vs. Legato:** Sing short bursts (staccato) vs smooth long notes (legato).  
+- **Breath Tap-outs:** Sing “ha ha ha” on one breath to build diaphragm coordination.
+
+These will build vocal agility and balance.
+""")
+
+elif exercise == "Stretching Vocal Range":
+    st.subheader("📈 Stretch Your Vocal Range")
+    st.markdown("""
+- **Octave Slides:** Glide from low to high pitch on “ng” or “woo” — like a siren.  
+- **Semi-Tone Steps:** Go up a half step each time you repeat a short phrase.  
+- **Yawning Warmup:** Do light yawns while humming to gently open your throat.
+
+Stretch slowly. Never push too hard past your comfortable range.
+""")
+
+st.info("💡 TIP: Use a keyboard app or tuner to track pitch and range as you practice.")
+
+
 # --- FOOTER ---
 st.divider()
 st.caption("VICKY is part of the Nrth Eydn Ltd. creative development platform. Streamlit-only prototype.")
