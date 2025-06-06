@@ -62,6 +62,46 @@ with col2:
 with col3:
     st.button("📚 Browse Exercises", help="Feature under development")
 
+
+import requests
+
+st.markdown("---")
+st.header("💬 Chat with VICKY")
+
+user_input = st.text_input("Ask VICKY anything about your voice, warmups, or singing tips:")
+
+if user_input:
+    with st.spinner("VICKY is thinking..."):
+        headers = {
+            "Authorization": "Bearer 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",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "inputs": {
+                "text": f"You are VIC, a gentle and supportive vocal coach helping a singer. Answer this: {user_input}"
+            }
+        }
+
+        response = requests.post(
+            "https://api-inference.huggingface.co/models/Qwen/Qwen1.5-1.8B-Chat",
+            headers=headers,
+            json=payload
+        )
+
+        if response.status_code == 200:
+            try:
+                output = response.json()
+                if isinstance(output, list) and len(output) > 0:
+                    reply = output[0]['generated_text'].split(user_input)[-1].strip()
+                    st.markdown(f"🗣️ **VICKY:** {reply}")
+                else:
+                    st.warning("⚠️ No valid response from VIC.")
+            except Exception as e:
+                st.error(f"🔧 Error parsing response: {e}")
+        else:
+            st.error(f"❌ Error: {response.status_code} - {response.text}")
+
 # --- FOOTER ---
 st.markdown("---")
 st.caption("VICKY is part of the Nrth Eydn Ltd. creative development platform. Powered by AI. Guided by purpose.")
